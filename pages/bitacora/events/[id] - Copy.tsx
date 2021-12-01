@@ -20,9 +20,6 @@ import { GlobalContext, GlobalProvider } from "../../../context/GlobalState";
 import getBitacoraEventsAdmin from "../../../services/getBitacoraEventsAdmin";
 import getBitacora from "../../../services/getBitacora";
 import Button from "../../../components/ButtonAdd";
-import HeaderBitacora from "../../../components/HearderBita";
-import { count } from "console";
-
 const styles = {
   card: {
     maxWidth: 645,
@@ -67,13 +64,13 @@ const BitaEvents = (props: any): JSX.Element => {
   const { editBitacoraNewEvent } = useContext(GlobalContext);
   const { query } = useRouter();
   const { isBitacora, loadBitacora, bitacora } = useBitacora(); //to Global
-  //console.log("IsBitacora?", isBitacora, " ID", bitacora);
+  console.log("IsBitacora?", isBitacora, " ID", bitacora);
   const [bitacoraID, setBitacoraId] = useState(query.id);
   const { bitacoraSelected, imageObj } = props;
   const [loading, setLoading] = useState(false);
   const [author, setAuthor] = useState("");
   const [bitacoraDate, setBitacoraDate] = useState("");
-  const [totalEvents, setTotalEvents] = useState("");
+
   const [modalInsertar, setModalInsertar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
   const [modalEditar, setModalEditar] = useState(false);
@@ -99,11 +96,10 @@ const BitaEvents = (props: any): JSX.Element => {
       getBitacora(query.id).then((resp) => {
         console.log("RESPBitacora", resp);
         setAuthor(resp.author.name);
-        setBitacoraDate(resp.bitacora_date);
-        setTotalEvents(bitaEvents.length);
+        setBitacoraDate(resp.bitacoraDate);
       });
     },
-    [setAuthor, setBitacoraDate, setTotalEvents, query]
+    [setAuthor, setBitacoraDate, query]
   );
 
   const [bitacoraE, setBitacoraE] = useState({
@@ -117,7 +113,7 @@ const BitaEvents = (props: any): JSX.Element => {
     description: "Dolor en ...",
     event_date: "2021-10-07",
   });
-  //console.log("BitacoraAdd seteando", bitacoraAdd);
+  console.log("BitacoraAdd seteando", bitacoraAdd);
 
   const {
     register,
@@ -146,11 +142,15 @@ const BitaEvents = (props: any): JSX.Element => {
 
   const seleccionarBitacora = (elemento: any, caso: any) => {
     setBitacoraSeleccionada(elemento);
+    console.log("ELEMENTO Eliminar o Editar", elemento);
+    console.log("CASO Eliminar o Editar", caso);
     caso === "Editar" ? setModalEditar(true) : setModalEliminar(true);
   };
   // to viewBitaEvent
   const seleccionarBitacora1 = (elemento: any, caso: any) => {
     setBitacoraSeleccionada1(elemento);
+    console.log("ELEMENTO", elemento);
+    console.log("CASO", caso);
     caso === "Editar" ? setModalEditar(true) : setModalViewHist(true);
   };
   // to editar
@@ -227,13 +227,63 @@ const BitaEvents = (props: any): JSX.Element => {
         <Container>
           <div className="flex rounded items-center justify-between flex-wrap bg-gray-100 p-2">
             <div className="bg-white shadow-lg ">
-              <HeaderBitacora
-                onClick={() => abrirModalInsertar()}
-                bitacoraid={query.id}
-                totalEvents={bitaEvents.length}
-                author={author}
-                bitacoraDate={bitacoraDate}
-              />
+              <div className="flex justify-between p-1">
+                <div>
+                  <h3 className="text-2xl tahoma font-extrabold tracking-widest text-gray-500">
+                    Administration Events
+                  </h3>
+                  <h3 className="text-2xl tahoma font-extrabold tracking-widest text-gray-500">
+                    Personal Bitacora {query.id}
+                  </h3>
+                </div>
+                <div className="p-2">
+                  <ul className="flex">
+                    <li className="flex flex-col items-center p-2 border-l-2 border-indigo-200">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="w-6 h-6 text-blue-600"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
+                        />
+                      </svg>
+                      <span className="text-sm">Author</span>
+                      <span className="text-sm">{author}</span>
+                    </li>
+                    <li className="flex flex-col p-2 border-l-2 border-indigo-200">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="w-6 h-6 text-blue-600"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                      </svg>
+                      <span className="text-sm">
+                        {convertDate(bitacoraDate)}
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
               <div className="w-full h-0.5 bg-indigo-500"></div>
               <div className="flex justify-center p-4">
                 <div className="border-b border-gray-200 shadow">

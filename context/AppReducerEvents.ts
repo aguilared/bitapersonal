@@ -57,6 +57,15 @@ export const AppReducerEvents = (
           (bitaevent) => bitaevent.id !== action.payload
         ),
       };
+    case "REMOVE_BITA_EVENTS": //Remove todos los eventos de una Bitacora
+      console.log("payload REMOVE_BITA_EVENTS", action.payload);
+
+      return {
+        ...state,
+        bitaEvents: state.bitaEvents.filter(
+          (bitaevents) => bitaevents.bitacora_id <= 0
+        ),
+      };
     case "ADD_BITA_EVENT":
       console.log("payload ADD BITAEVENT", action.payload);
       console.log("El STATE BITAEVENT SUCCESS", state.bitaEvents);

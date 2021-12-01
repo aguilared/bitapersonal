@@ -47,10 +47,14 @@ export const EventsProvider = ({ children }: Props): JSX.Element => {
   console.log("BITACORA", bitacora);
 
   useEffect(() => {
-    setLoading(true);
+    if (!isBitacora) {
+      // no run reducer initial start
+      console.log("No hay IDBitacora", bitacora);
+      return;
+    }
     dispatch({
-      type: "FETCH_BITA_EVENTS_REQUEST",
-      payload: "Haciendo un Request BitaEvents",
+      type: "REMOVE_BITA_EVENTS",
+      payload: "Remove bitacora eventos anteriores",
     });
     const fetchData = async () => {
       try {
